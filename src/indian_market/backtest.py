@@ -24,7 +24,7 @@ def run_sma_crossover(candles: list[Candle], initial_cash: float = 100000,
         raise ValueError("Require 0 < fast_period < slow_period and positive quantity")
     if initial_cash <= 0:
         raise ValueError("initial_cash must be positive")
-    if len(candles) < slow_period + 1:
+    if len(candles) < slow_period + 2:
         raise ValueError("Not enough candles for the requested periods and next-bar execution")
     ordered = sorted(candles, key=lambda c: c.timestamp)
     for candle in ordered:
@@ -37,12 +37,11 @@ def run_sma_crossover(candles: list[Candle], initial_cash: float = 100000,
 
     account = PaperAccount(initial_cash, fee_bps, slippage_bps)
     completed_trade_pnls: list[float] = []
-    entry_equity = None
     peak = initial_cash
     max_dd = 0.0
     marks = {symbol: ordered[0].close}
 
-    for i in range(slow_period, len(ordered)):
+    for i in range(slow_period + 1, len(ordered)):
         # Signal is calculated only from bars strictly before the execution bar.
         history = [c.close for c in ordered[:i]]
         fast_now = sum(history[-fast_period:]) / fast_period
@@ -59,14 +58,12 @@ def run_sma_crossover(candles: list[Candle], initial_cash: float = 100000,
         if crossed_up and not has_position:
             try:
                 account.buy(symbol, quantity, bar.open, bar.timestamp.isoformat())
-                entry_equity = account.realized_pnl
             except ValueError:
                 pass
         elif crossed_down and has_position:
             before = account.realized_pnl
             account.sell(symbol, held.quantity, bar.open, bar.timestamp.isoformat())
             completed_trade_pnls.append(account.realized_pnl - before)
-            entry_equity = None
 
         equity = account.equity(marks)
         peak = max(peak, equity)
@@ -81,6 +78,8 @@ def run_sma_crossover(candles: list[Candle], initial_cash: float = 100000,
         account.sell(symbol, held.quantity, last.close, last.timestamp.isoformat())
         completed_trade_pnls.append(account.realized_pnl - before)
     final_equity = account.cash
+    peak = max(peak, final_equity)
+    max_dd = max(max_dd, (peak - final_equity) / peak * 100 if peak else 0.0)
     net = final_equity - initial_cash
     wins = sum(p > 0 for p in completed_trade_pnls)
     return BacktestResult(initial_cash, final_equity, net,
