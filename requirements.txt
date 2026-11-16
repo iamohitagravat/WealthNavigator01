@@ -1,0 +1,2 @@
+# Core package intentionally uses Python standard library only.
+# Add provider-specific SDKs here only when an integration is implemented.
