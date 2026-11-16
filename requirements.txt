@@ -1,2 +1,3 @@
-# Core package intentionally uses Python standard library only.
-# Add provider-specific SDKs here only when an integration is implemented.
+# Core package uses the Python standard library.
+# Optional Yahoo Finance historical research adapter.
+yfinance>=0.2.50
