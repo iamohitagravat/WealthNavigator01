@@ -1,0 +1,13 @@
+project:
+  name: Indian Market Pro Trading Assistant
+  market: India
+  exchanges: [NSE, BSE]
+  indices: [NIFTY, BANKNIFTY]
+  modes: [scalping, intraday, swing, positional, futures, options]
+trading:
+  live_orders_enabled: false
+  paper_trading_enabled: true
+risk:
+  max_risk_per_trade_pct: 1.0
+  require_stop_loss: true
+  require_defined_invalidation: true
