@@ -1,0 +1,3 @@
+timestamp,symbol,exchange,interval,open,high,low,close,volume
+2026-11-13T09:15:00+05:30,RELIANCE,NSE,5m,1500,1505,1498,1503,12000
+2026-11-13T09:20:00+05:30,RELIANCE,NSE,5m,1503,1508,1501,1506,9800
