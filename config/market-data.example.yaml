@@ -1,0 +1,15 @@
+# Example only: select a licensed provider and configure secrets securely.
+provider:
+  name: null
+  mode: paper
+  live_data_enabled: false
+  api_key_env: MARKET_DATA_API_KEY
+  api_secret_env: MARKET_DATA_API_SECRET
+symbols:
+  indices:
+    - {symbol: NIFTY, exchange: NSE}
+    - {symbol: BANKNIFTY, exchange: NSE}
+freshness:
+  intraday_max_age_seconds: 90
+  end_of_day_max_age_seconds: 86400
+# Never store API keys, passwords, broker tokens or TOTP secrets here.
