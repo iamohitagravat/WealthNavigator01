@@ -50,7 +50,7 @@ class PaperAccount:
             if debit > self.cash:
                 raise ValueError("Insufficient cash for paper BUY")
             new_qty = pos.quantity + quantity
-            pos.average_price = ((pos.average_price * pos.quantity) + gross) / new_qty
+            pos.average_price = ((pos.average_price * pos.quantity) + gross + fees) / new_qty
             pos.quantity = new_qty
             self.cash -= debit
         else:
